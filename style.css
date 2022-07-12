@@ -1,0 +1,18 @@
+body{
+    
+}
+
+.board{
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    justify-content: center;
+    align-content: center;
+}
+.board > div{
+    display: flex;
+    
+}
+.board > div > div{
+    border: 1px solid;
+    padding: 20px;
+}
