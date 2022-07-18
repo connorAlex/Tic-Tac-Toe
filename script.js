@@ -7,7 +7,7 @@ const Players = () => {
 
 //gameboard - do not touch DOM
 const gameboard = (() => {
-    let board =  Array(9).fill(null);
+    let board =  Array(9).fill("1");
 
     const move = (space, symbol) => {
         let tmp  = board;
@@ -32,7 +32,7 @@ const displayController = (() => {
             document.getElementById(i).innerHTML = boardArr[i];
         }
     };
-
+    render();
     return {render};
 })();
 
