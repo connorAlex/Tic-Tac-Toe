@@ -84,7 +84,9 @@ const game = (() => {
     let isPlayerOne = true;
     //all together now, this wil be the function on the event listener
     const playRound = (element) => {
-        
+        if (element.innerHTML != ""){
+            return ;
+        }
         if (isPlayerOne) {
             displayController.turn(element.id, playerOne);
         }
