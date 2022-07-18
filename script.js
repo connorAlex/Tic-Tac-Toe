@@ -80,12 +80,18 @@ const displayController = (() => {
 const game = (() => {
     let playerOne = Player(1);
     let playerTwo = Player(2);
-    console.log(playerOne.getSymbol());
+    let gameOver = false;
+
     let isPlayerOne = true;
+
+    const getGameState = () => {
+        return gameOver;
+    }
+
     //all together now, this wil be the function on the event listener
     const playRound = (element) => {
         if (element.innerHTML != ""){
-            return ;
+            return;
         }
         if (isPlayerOne) {
             displayController.turn(element.id, playerOne);
@@ -94,7 +100,10 @@ const game = (() => {
             displayController.turn(element.id, playerTwo);
         }
         isPlayerOne = !isPlayerOne;
-        console.log(gameboard.checkWinner());
+        if(gameboard.checkWinner()) {
+            alert("WIN");
+        }
+        document.querySelector(".header").innerHTML = isPlayerOne ? 'Player 1 Turn' : 'Player 2 Turn';
     };
 
     return {playRound};
