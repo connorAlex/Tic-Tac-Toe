@@ -99,11 +99,13 @@ const game = (() => {
         else{
             displayController.turn(element.id, playerTwo);
         }
-        isPlayerOne = !isPlayerOne;
-        if(gameboard.checkWinner()) {
-            alert("WIN");
-        }
+        
+
         document.querySelector(".header").innerHTML = isPlayerOne ? 'Player 1 Turn' : 'Player 2 Turn';
+        if(gameboard.checkWinner()) {
+            alert(`${isPlayerOne ? "Player 1": "Player 2"} WINS`);
+        }
+        isPlayerOne = !isPlayerOne;
     };
 
     return {playRound};
