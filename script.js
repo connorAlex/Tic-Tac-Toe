@@ -40,10 +40,19 @@ const gameboard = (() => {
     //reset the board array with null.
     const reset = () => {
         //using a more immutable method for replacement
-        board.fill(null);
+        _board.fill(null);
         game.resetPlayer();
         displayController.render();
     }
+
+    const checkDraw = () => {
+        if (!_board.includes(null)){
+            return true;
+        }
+        return false;
+    }
+    
+
 
     //determine game win state
     const checkWinner = () => {
@@ -65,7 +74,7 @@ const gameboard = (() => {
             let [a,b,c] = wins[i];
 
             //if all of the board values in any of the win states match, that's a win
-            if (board[a] === board[b] && board[a] === board[c] && board[a]) {
+            if (_board[a] === _board[b] && _board[a] === _board[c] && _board[a]) {
                 return true;
             }
         }
@@ -73,7 +82,7 @@ const gameboard = (() => {
         return false;
     }
 
-    return {move, getBoard, checkWinner, reset};
+    return {move, getBoard, checkWinner, reset, checkDraw};
 })();
 
 
@@ -109,9 +118,13 @@ const displayController = (() => {
         render();
     }
     
-    //winHeader changes based on win, will reset if no param is given
+    //winHeader changes based on win/draw, will reset if no param is given
     const winHeader = (winner) => {
-        if (winner) {
+        if (winner === "draw"){
+            header.innerHTML = "Draw!";
+            return;
+
+        }else if (winner) {
             header.innerHTML = `${winner} wins!`;
             return;    
         }
@@ -157,6 +170,11 @@ const game = (() => {
 
         //swap header to the next player's turn
         displayController.changeHeader(isPlayerOne);
+        
+        //check for draw
+        if (gameboard.checkDraw()){
+            displayController.winHeader("draw");
+        }
 
         //check if that move caused the game to win
         if(gameboard.checkWinner()) {
