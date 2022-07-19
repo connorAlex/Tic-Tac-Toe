@@ -90,16 +90,16 @@ const game = (() => {
     let playerOne = Player(1);
     let playerTwo = Player(2);
     let gameOver = false;
-
+    let header = document.querySelector('.header');
     let isPlayerOne = true;
 
     const resetPlayer = () =>{
         isPlayerOne = true;
-        document.querySelector('.header').innerHTML = 'Welcome to Tic-Tac-Toe!';
+        header.innerHTML = 'Welcome to Tic-Tac-Toe!';
     }
 
     const changeHeader = () => {
-        document.querySelector(".header").innerHTML = !isPlayerOne ? 'Next: Player 1' : 'Next: Player 2';
+        header.innerHTML = !isPlayerOne ? 'Next: Player 1' : 'Next: Player 2';
     }
     //all together now, this wil be the function on the event listener
     const playRound = (element) => {
