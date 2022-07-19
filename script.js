@@ -1,7 +1,8 @@
 //tic tac toe
 
 //players 
-const Player = (num) => {
+const Player = (num, name) => {
+
     const getSymbol = () => {
         if (num === 1){
             return "X";
@@ -10,7 +11,12 @@ const Player = (num) => {
             return "O";
         }
     };
-    return {getSymbol};
+
+    const getName = () => {
+        return name;
+    }
+
+    return {getSymbol, getName};
 };
 
 //gameboard - do not touch DOM
@@ -59,6 +65,9 @@ const gameboard = (() => {
 
 //displayController - ties DOM to board
 const displayController = (() => {
+
+    let header = document.querySelector('.header');
+
     //render function
     const render = () => {
         let boardArr = gameboard.getBoard();
@@ -74,6 +83,19 @@ const displayController = (() => {
         render();
     }
     
+    const winHeader = (winner) => {
+        
+        if (winner) {
+            header.innerHTML = `${winner} wins!`;
+            return;    
+        }
+        header.innerHTML = "Welcome to Tic-Tac-Toe!";
+    }
+
+    const changeHeader = (currentPlayerBool) => {
+        header.innerHTML = `${!currentPlayerBool ? 'Next: Player 1':'Next: Player 2'}`
+    }
+
     let cells = document.querySelectorAll(".cell");
     cells.forEach((e) => {
         e.addEventListener("click", function() {game.playRound(this)});
@@ -81,31 +103,29 @@ const displayController = (() => {
 
     let resetButton = document.querySelector("button");
     resetButton.addEventListener("click", function() {gameboard.reset()});
-    return {turn, render};
+    return {turn, render, winHeader, changeHeader};
 })();
 
 
-//game - checks win state, current player. Does not touch DOM
+//game - checks win state, current player.
 const game = (() => {
-    let playerOne = Player(1);
-    let playerTwo = Player(2);
+    let playerOne = Player(1, "Alice");
+    let playerTwo = Player(2, "Bob");
     let gameOver = false;
     let header = document.querySelector('.header');
     let isPlayerOne = true;
 
     const resetPlayer = () =>{
         isPlayerOne = true;
-        header.innerHTML = 'Welcome to Tic-Tac-Toe!';
+        displayController.changeHeader();
     }
 
-    const changeHeader = () => {
-        header.innerHTML = !isPlayerOne ? 'Next: Player 1' : 'Next: Player 2';
-    }
     //all together now, this wil be the function on the event listener
     const playRound = (element) => {
         if (element.innerHTML != ""){
             return;
         }
+
         if (isPlayerOne) {
             displayController.turn(element.id, playerOne);
         }
@@ -114,9 +134,10 @@ const game = (() => {
         }
         
 
-        changeHeader();
+        displayController.changeHeader(isPlayerOne);
         if(gameboard.checkWinner()) {
-            alert(`${isPlayerOne ? "Player 1": "Player 2"} WINS`);
+            
+            displayController.winHeader(isPlayerOne ? playerOne.getName() : playerTwo.getName());
         }
         isPlayerOne = !isPlayerOne;
     };
