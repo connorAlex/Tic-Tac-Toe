@@ -2,7 +2,8 @@
 
 //players 
 const Player = (num, name) => {
-
+    
+    //getter for player's symbol
     const getSymbol = () => {
         if (num === 1){
             return "X";
@@ -12,6 +13,7 @@ const Player = (num, name) => {
         }
     };
 
+    //getter for player's name
     const getName = () => {
         return name;
     }
@@ -21,25 +23,31 @@ const Player = (num, name) => {
 
 //gameboard - do not touch DOM
 const gameboard = (() => {
-    let board =  Array(9).fill(null);
+    let _board =  Array(9).fill(null);
 
+    //change a position on the board arr
     const move = (space, symbol) => {
-        let tmp  = board;
+        let tmp  = _board;
         tmp[space] = symbol;
-        board = tmp;
+        _board = tmp;
     };
 
+    //return private board arr
     const getBoard = () => {
-        return board;
+        return _board;
     }
-
+    
+    //reset the board array with null.
     const reset = () => {
+        //using a more immutable method for replacement
         board.fill(null);
         game.resetPlayer();
         displayController.render();
     }
 
     const checkWinner = () => {
+
+        //hardcode all of the potential win states
         let wins = [
             [0,1,2],
             [3,4,5],
@@ -50,14 +58,20 @@ const gameboard = (() => {
             [0,4,8],
             [2,4,6]
         ];
+
         for (let i = 0; i < wins.length; i++){
+            //using 'deconstructing assignment'(ES6) to split each of the arr items to specific vars
             let [a,b,c] = wins[i];
+
+            //if all of the board values in any of the win states match, that's a win
             if (board[a] === board[b] && board[a] === board[c] && board[a]) {
                 return true;
             }
         }
+
         return false;
     }
+
     return {move, getBoard, checkWinner, reset};
 })();
 
@@ -68,12 +82,13 @@ const displayController = (() => {
 
     let header = document.querySelector('.header');
 
-    //add event listeners to squares and the reset button
+    //add event listeners to squares
     let cells = document.querySelectorAll(".cell");
     cells.forEach((e) => {
         e.addEventListener("click", function() {game.playRound(this)});
     });
 
+    //..reset button as well
     let resetButton = document.querySelector("button");
     resetButton.addEventListener("click", function() {gameboard.reset()});
 
@@ -85,6 +100,7 @@ const displayController = (() => {
         }
     };
     
+    //turn couples the move with re-rendering the DOM
     const turn = (square, player) => {
         //make a move 
         gameboard.move(square, player.getSymbol());
@@ -92,8 +108,8 @@ const displayController = (() => {
         render();
     }
     
+    //winHeader changes based on win, will reset if no param is given
     const winHeader = (winner) => {
-        
         if (winner) {
             header.innerHTML = `${winner} wins!`;
             return;    
@@ -101,6 +117,7 @@ const displayController = (() => {
         header.innerHTML = "Welcome to Tic-Tac-Toe!";
     }
 
+    //change header based on the current player's turn
     const changeHeader = (currentPlayerBool) => {
         header.innerHTML = `${!currentPlayerBool ? 'Next: Player 1':'Next: Player 2'}`
     }
@@ -112,10 +129,8 @@ const displayController = (() => {
 
 //game - checks win state, current player.
 const game = (() => {
-    let playerOne = Player(1, "Alice");
-    let playerTwo = Player(2, "Bob");
-    let gameOver = false;
-    let header = document.querySelector('.header');
+    const playerOne = Player(1, "Alice");
+    const playerTwo = Player(2, "Bob");
     let isPlayerOne = true;
 
     const resetPlayer = () =>{
@@ -125,23 +140,29 @@ const game = (() => {
 
     //all together now, this wil be the function on the event listener
     const playRound = (element) => {
+
+        //has a space been filled || is the game over?
         if (element.innerHTML != "" || gameboard.checkWinner() === true){
             return;
         }
 
+        //allocates symbol based on turn
         if (isPlayerOne) {
             displayController.turn(element.id, playerOne);
         }
         else{
             displayController.turn(element.id, playerTwo);
         }
-        
 
+        //swap header to the next player's turn
         displayController.changeHeader(isPlayerOne);
+
+        //check if that move caused the game to win
         if(gameboard.checkWinner()) {
-            
             displayController.winHeader(isPlayerOne ? playerOne.getName() : playerTwo.getName());
         }
+
+        //swap turn to the next player
         isPlayerOne = !isPlayerOne;
     };
     
