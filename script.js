@@ -45,6 +45,7 @@ const gameboard = (() => {
         displayController.render();
     }
 
+    //determine game win state
     const checkWinner = () => {
 
         //hardcode all of the potential win states
