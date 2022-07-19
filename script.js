@@ -27,6 +27,12 @@ const gameboard = (() => {
         return board;
     }
 
+    const reset = () => {
+        board.fill(null);
+        game.resetPlayer();
+        displayController.render();
+    }
+
     const checkWinner = () => {
         let wins = [
             [0,1,2],
@@ -46,7 +52,7 @@ const gameboard = (() => {
         }
         return false;
     }
-    return {move, getBoard, checkWinner};
+    return {move, getBoard, checkWinner, reset};
 })();
 
 
@@ -72,7 +78,10 @@ const displayController = (() => {
     cells.forEach((e) => {
         e.addEventListener("click", function() {game.playRound(this)});
     });
-    return {turn};
+
+    let resetButton = document.querySelector("button");
+    resetButton.addEventListener("click", function() {gameboard.reset()});
+    return {turn, render};
 })();
 
 
@@ -84,10 +93,14 @@ const game = (() => {
 
     let isPlayerOne = true;
 
-    const getGameState = () => {
-        return gameOver;
+    const resetPlayer = () =>{
+        isPlayerOne = true;
+        document.querySelector('.header').innerHTML = 'Welcome to Tic-Tac-Toe!';
     }
 
+    const changeHeader = () => {
+        document.querySelector(".header").innerHTML = !isPlayerOne ? 'Next: Player 1' : 'Next: Player 2';
+    }
     //all together now, this wil be the function on the event listener
     const playRound = (element) => {
         if (element.innerHTML != ""){
@@ -101,12 +114,13 @@ const game = (() => {
         }
         
 
-        document.querySelector(".header").innerHTML = isPlayerOne ? 'Player 1 Turn' : 'Player 2 Turn';
+        changeHeader();
         if(gameboard.checkWinner()) {
             alert(`${isPlayerOne ? "Player 1": "Player 2"} WINS`);
         }
         isPlayerOne = !isPlayerOne;
     };
+    
 
-    return {playRound};
+    return {playRound, resetPlayer};
 })();
