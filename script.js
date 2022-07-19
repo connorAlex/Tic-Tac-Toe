@@ -117,7 +117,7 @@ const game = (() => {
 
     const resetPlayer = () =>{
         isPlayerOne = true;
-        displayController.changeHeader();
+        displayController.winHeader();
     }
 
     //all together now, this wil be the function on the event listener
