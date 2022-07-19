@@ -143,8 +143,8 @@ const displayController = (() => {
 
 //game - checks win state, current player.
 const game = (() => {
-    const playerOne = Player(1, "Alice");
-    const playerTwo = Player(2, "Bob");
+    const playerOne = Player(1, "Player 1");
+    const playerTwo = Player(2, "Player 2");
     let isPlayerOne = true;
 
     const resetPlayer = () =>{
