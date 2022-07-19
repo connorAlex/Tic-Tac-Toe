@@ -68,6 +68,15 @@ const displayController = (() => {
 
     let header = document.querySelector('.header');
 
+    //add event listeners to squares and the reset button
+    let cells = document.querySelectorAll(".cell");
+    cells.forEach((e) => {
+        e.addEventListener("click", function() {game.playRound(this)});
+    });
+
+    let resetButton = document.querySelector("button");
+    resetButton.addEventListener("click", function() {gameboard.reset()});
+
     //render function
     const render = () => {
         let boardArr = gameboard.getBoard();
@@ -96,13 +105,7 @@ const displayController = (() => {
         header.innerHTML = `${!currentPlayerBool ? 'Next: Player 1':'Next: Player 2'}`
     }
 
-    let cells = document.querySelectorAll(".cell");
-    cells.forEach((e) => {
-        e.addEventListener("click", function() {game.playRound(this)});
-    });
-
-    let resetButton = document.querySelector("button");
-    resetButton.addEventListener("click", function() {gameboard.reset()});
+    
     return {turn, render, winHeader, changeHeader};
 })();
 
@@ -122,7 +125,7 @@ const game = (() => {
 
     //all together now, this wil be the function on the event listener
     const playRound = (element) => {
-        if (element.innerHTML != ""){
+        if (element.innerHTML != "" || gameboard.checkWinner() === true){
             return;
         }
 
